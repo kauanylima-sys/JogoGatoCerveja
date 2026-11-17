@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://cvfyopjw5ika1"]
 
-[ext_resource type="Texture2D" uid="uid://bfwcx1loodwmf" path="res://assets/sprite_pack_cat/blink/blink_00.png" id="1_xgiyj"]
-[ext_resource type="Texture2D" uid="uid://bmcnm4uesqany" path="res://assets/sprite_pack_cat/blink/blink_01.png" id="2_kesob"]
+[ext_resource type="Script" uid="uid://dt7o57l3mfv54" path="res://cerveja.gd" id="1_mq83j"]
+[ext_resource type="Texture2D" uid="uid://bfwcx1loodwmf" path="res://assets/blink/blink_00.png" id="1_xgiyj"]
+[ext_resource type="Texture2D" uid="uid://bmcnm4uesqany" path="res://assets/blink/blink_01.png" id="2_kesob"]
 [ext_resource type="Texture2D" uid="uid://c0ms7o7i8pb1j" path="res://assets/sprite_pack_cat/blink/blink_02.png" id="3_v7oxs"]
 [ext_resource type="Texture2D" uid="uid://dythsulh0s1qk" path="res://assets/sprite_pack_cat/blink/blink_03.png" id="4_qjhxl"]
 [ext_resource type="Texture2D" uid="uid://djt02s7i5qy32" path="res://assets/sprite_pack_cat/blink/blink_04.png" id="5_6c5h7"]
@@ -38,10 +39,10 @@
 [ext_resource type="Texture2D" uid="uid://neo1xjl07iwm" path="res://assets/sprite_pack_cat/run/run_09.png" id="36_gc4p7"]
 [ext_resource type="Texture2D" uid="uid://celmrma7nfp5n" path="res://assets/sprite_pack_cat/run/run_10.png" id="37_xaq7i"]
 [ext_resource type="Texture2D" uid="uid://du2uf6dtubqnr" path="res://assets/sprite_pack_cat/run/run_11.png" id="38_xoc42"]
-[ext_resource type="Texture2D" uid="uid://cqb17jxp1r2hv" path="res://assets/walk/cat_walk_00.png" id="39_upvc7"]
-[ext_resource type="Texture2D" uid="uid://dxrcyuw3j80ou" path="res://assets/walk/cat_walk_01.png" id="40_2601i"]
-[ext_resource type="Texture2D" uid="uid://cox6fbmgt4edn" path="res://assets/walk/cat_walk_02.png" id="41_en6l4"]
-[ext_resource type="Texture2D" uid="uid://460dk6wfagjy" path="res://assets/walk/cat_walk_03.png" id="42_yeuke"]
+[ext_resource type="Texture2D" uid="uid://cqb17jxp1r2hv" path="res://assets/sprite_pack_cat/walk/cat_walk_00.png" id="39_upvc7"]
+[ext_resource type="Texture2D" uid="uid://dxrcyuw3j80ou" path="res://assets/sprite_pack_cat/walk/cat_walk_01.png" id="40_2601i"]
+[ext_resource type="Texture2D" uid="uid://cox6fbmgt4edn" path="res://assets/sprite_pack_cat/walk/cat_walk_02.png" id="41_en6l4"]
+[ext_resource type="Texture2D" uid="uid://460dk6wfagjy" path="res://assets/sprite_pack_cat/walk/cat_walk_03.png" id="42_yeuke"]
 [ext_resource type="Texture2D" uid="uid://cynh73eocal2e" path="res://assets/walk/cat_walk_04.png" id="43_8u0ji"]
 [ext_resource type="Texture2D" uid="uid://6vnjb327jidu" path="res://assets/walk/cat_walk_05.png" id="44_ankfa"]
 [ext_resource type="Texture2D" uid="uid://dt0k7a5ksulqf" path="res://assets/walk/cat_walk_06.png" id="45_li1gk"]
@@ -250,11 +251,24 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="cerveja" type="CharacterBody2D" unique_id=1666266618]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f07vn"]
+size = Vector2(15, 16)
+
+[node name="cerveja" type="CharacterBody2D" unique_id=98638339]
+motion_mode = 1
+script = ExtResource("1_mq83j")
+metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=854194395]
-position = Vector2(9, 6)
-scale = Vector2(0.056896336, 0.052463517)
+position = Vector2(2.6206954, 2.0507295)
+scale = Vector2(0.313, 0.3)
 sprite_frames = SubResource("SpriteFrames_oi2um")
-animation = &"walk"
-frame_progress = 0.99558365
+animation = &"idle"
+frame_progress = 0.80668133
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1051260715]
+position = Vector2(2.5, 4)
+shape = SubResource("RectangleShape2D_f07vn")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1682637015]
+zoom = Vector2(4, 4)
