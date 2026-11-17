@@ -22,10 +22,10 @@ const ROSA_DOS_VENTOS = ["L", "SE", "S", "SO", "O", "NO", "N", "NE"]
 
 var direcao_atual = "S"
 var tempo_parado = 0.0
-var fazendo_ocioso = false  # true enquanto pisca ou lambe
-var machucado = false       # true enquanto toca a animação hurt
-var morto = false           # true quando a vida chegou a 0
-var venceu = false          # true quando pegou todos os peixes
+var fazendo_ocioso = false  
+var machucado = false       
+var morto = false           
+var venceu = false          
 var vida = VIDA_MAXIMA
 
 
