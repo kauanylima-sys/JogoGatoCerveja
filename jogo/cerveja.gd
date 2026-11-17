@@ -4,11 +4,9 @@ const VELOCIDADE_ANDAR = 80.0
 const VELOCIDADE_CORRER = 160.0
 const VIDA_MAXIMA = 3
 
-# Quantos segundos parado até cada ação
 const TEMPO_PARA_PISCAR = 4.0
 const TEMPO_PARA_LAMBER = 7.0
 
-# Escala de cada animação (ajuste até todas ficarem do mesmo tamanho)
 const ESCALAS = {
 	"idle": 0.3,
 	"walk": 0.08,
@@ -20,7 +18,6 @@ const ESCALAS = {
 
 @onready var anim = $AnimatedSprite2D
 
-# Ordem importa: começa no Leste e gira no sentido horário
 const ROSA_DOS_VENTOS = ["L", "SE", "S", "SO", "O", "NO", "N", "NE"]
 
 var direcao_atual = "S"
@@ -43,7 +40,7 @@ func _ready():
 
 
 func _physics_process(delta):
-	# Machucado, morto ou vencedor: fica parado
+	
 	if machucado or morto or venceu:
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -73,7 +70,6 @@ func _physics_process(delta):
 	move_and_slide()
 
 
-# Chamada pelos itens quando o gato encosta neles
 func comer(tipo: String):
 	if morto or venceu:
 		return
@@ -91,7 +87,7 @@ func _passar_de_fase():
 	venceu = true
 	fazendo_ocioso = false
 	print("Todos os peixes! Próxima fase...")
-	_tocar("lick")  # comemora lambendo a pata
+	_tocar("lick") 
 	await get_tree().create_timer(1.5).timeout
 
 	var caminho = _caminho_da_proxima_fase()
@@ -101,17 +97,17 @@ func _passar_de_fase():
 	get_tree().change_scene_to_file(caminho)
 
 
-# Descobre a próxima fase pelo número no nome: fase_01 -> fase_02
-func _caminho_da_proxima_fase() -> String:
-	var atual = get_tree().current_scene.scene_file_path  # ex: res://fase_01.tscn
-	var nome = atual.get_file().get_basename()            # ex: fase_01
 
-	var partes = nome.rsplit("_", true, 1)                # ["fase", "01"]
+func _caminho_da_proxima_fase() -> String:
+	var atual = get_tree().current_scene.scene_file_path 
+	var nome = atual.get_file().get_basename()           
+
+	var partes = nome.rsplit("_", true, 1)               
 	if partes.size() < 2 or not partes[1].is_valid_int():
 		return ""
 
 	var numero = partes[1].to_int() + 1
-	var digitos = partes[1].length()                      # mantém o "01" com 2 dígitos
+	var digitos = partes[1].length()                      
 	var proximo = "%s_%0*d" % [partes[0], digitos, numero]
 	var caminho = atual.get_base_dir() + "/" + proximo + ".tscn"
 
@@ -130,13 +126,13 @@ func _machucar():
 	print("Ai! Comeu lixo. Vida: ", vida)
 	_tocar("hurt")
 
-	# Pisca em vermelho para dar o efeito de dano
+
 	var tween = create_tween()
 	tween.tween_property(anim, "modulate", Color(1, 0.4, 0.4), 0.15)
 	tween.tween_property(anim, "modulate", Color.WHITE, 0.15)
 	tween.set_loops(2)
 
-	# Vida zerou: espera 1 segundo e recomeça o jogo
+
 	if vida <= 0:
 		morto = true
 		print("Game over! Recomeçando...")
@@ -144,7 +140,7 @@ func _machucar():
 		get_tree().reload_current_scene()
 
 
-# Controla idle -> piscar -> lamber quando o gato está parado
+
 func _atualizar_parado(delta):
 	if fazendo_ocioso:
 		return
@@ -162,7 +158,6 @@ func _atualizar_parado(delta):
 		_tocar("idle")
 
 
-# Quando blink, lick ou hurt terminam, volta para idle
 func _ao_terminar_animacao():
 	if venceu or morto:
 		return
@@ -188,7 +183,6 @@ func _criar_acao(nome: String, teclas: Array):
 		InputMap.action_add_event(nome, evento)
 
 
-# Troca a animação e ajusta a escala dela
 func _tocar(nome: String, reiniciar: bool = true):
 	anim.scale = Vector2.ONE * ESCALAS.get(nome, 0.3)
 	if reiniciar or anim.animation != nome:
