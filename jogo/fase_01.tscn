@@ -2,7 +2,6 @@
 
 [ext_resource type="Texture2D" uid="uid://bkqi40sgn04em" path="res://assets/sprite_pack_city/1_cenario_principal/cenario_principal_480x320.png" id="1_axix2"]
 [ext_resource type="Texture2D" uid="uid://bsf2o6kotq2bx" path="res://assets/sprite_pack_city/2_elementos_decorativos/decoracoes_fase1_grade16.png" id="2_jbu07"]
-[ext_resource type="PackedScene" uid="uid://cvfyopjw5ika1" path="res://cerveja.tscn" id="3_3wmwu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbu07"]
 texture = ExtResource("1_axix2")
@@ -793,6 +792,3 @@ polygon = PackedVector2Array(640, 127, 641, 271, 813, 270, 812, 131)
 
 [node name="CollisionPolygon2D6" type="CollisionPolygon2D" parent="colisoes" unique_id=903929029]
 polygon = PackedVector2Array(769, 419, 957, 417, 959, 541, 770, 541)
-
-[node name="cerveja" parent="." unique_id=98638339 instance=ExtResource("3_3wmwu")]
-position = Vector2(58, 325)

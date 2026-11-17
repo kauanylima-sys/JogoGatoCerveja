@@ -6,6 +6,7 @@ const VIDA_MAXIMA = 3
 
 const TEMPO_PARA_PISCAR = 4.0
 const TEMPO_PARA_LAMBER = 7.0
+const TEMPO_PARA_ACHAR_PEIXE = 20.0  
 
 const ESCALAS = {
 	"idle": 0.3,
@@ -22,14 +23,17 @@ const ROSA_DOS_VENTOS = ["L", "SE", "S", "SO", "O", "NO", "N", "NE"]
 
 var direcao_atual = "S"
 var tempo_parado = 0.0
-var fazendo_ocioso = false  
-var machucado = false       
-var morto = false           
-var venceu = false          
+var fazendo_ocioso = false
+var machucado = false
+var morto = false
+var venceu = false
 var vida = VIDA_MAXIMA
+var tempo_restante = TEMPO_PARA_ACHAR_PEIXE
+var posicao_inicial = Vector2.ZERO
 
 
 func _ready():
+	posicao_inicial = global_position
 	_criar_acao("norte", [KEY_W, KEY_UP])
 	_criar_acao("sul", [KEY_S, KEY_DOWN])
 	_criar_acao("oeste", [KEY_A, KEY_LEFT])
@@ -40,10 +44,15 @@ func _ready():
 
 
 func _physics_process(delta):
-	
+
 	if machucado or morto or venceu:
 		velocity = Vector2.ZERO
 		move_and_slide()
+		return
+
+	tempo_restante -= delta
+	if tempo_restante <= 0.0:
+		_perder_vida_por_tempo()
 		return
 
 	var direcao = Input.get_vector("oeste", "leste", "norte", "sul")
@@ -76,6 +85,7 @@ func comer(tipo: String):
 	if tipo == "lixo":
 		_machucar()
 	elif tipo == "peixe":
+		tempo_restante = TEMPO_PARA_ACHAR_PEIXE
 		vida = min(vida + 1, VIDA_MAXIMA)
 		var restantes = get_tree().get_nodes_in_group("peixe").size()
 		print("Nhac! Vida: ", vida, " | Peixes restantes: ", restantes)
@@ -87,27 +97,27 @@ func _passar_de_fase():
 	venceu = true
 	fazendo_ocioso = false
 	print("Todos os peixes! Próxima fase...")
-	_tocar("lick") 
+	_tocar("lick")
 	await get_tree().create_timer(1.5).timeout
 
 	var caminho = _caminho_da_proxima_fase()
 	if caminho == "":
-		print("Não existe próxima fase. Fim de jogo!")
+		print("Vitoria!!")
 		return
 	get_tree().change_scene_to_file(caminho)
 
 
 
 func _caminho_da_proxima_fase() -> String:
-	var atual = get_tree().current_scene.scene_file_path 
-	var nome = atual.get_file().get_basename()           
+	var atual = get_tree().current_scene.scene_file_path
+	var nome = atual.get_file().get_basename()
 
-	var partes = nome.rsplit("_", true, 1)               
+	var partes = nome.rsplit("_", true, 1)
 	if partes.size() < 2 or not partes[1].is_valid_int():
 		return ""
 
 	var numero = partes[1].to_int() + 1
-	var digitos = partes[1].length()                      
+	var digitos = partes[1].length()
 	var proximo = "%s_%0*d" % [partes[0], digitos, numero]
 	var caminho = atual.get_base_dir() + "/" + proximo + ".tscn"
 
@@ -122,10 +132,7 @@ func _machucar():
 	machucado = true
 	fazendo_ocioso = false
 	tempo_parado = 0.0
-	vida -= 1
-	print("Ai! Comeu lixo. Vida: ", vida)
 	_tocar("hurt")
-
 
 	var tween = create_tween()
 	tween.tween_property(anim, "modulate", Color(1, 0.4, 0.4), 0.15)
@@ -133,12 +140,20 @@ func _machucar():
 	tween.set_loops(2)
 
 
+func _perder_vida_por_tempo():
+	vida -= 1
+	print("Tempo esgotado! Vida: ", vida)
+
 	if vida <= 0:
 		morto = true
 		print("Game over! Recomeçando...")
 		await get_tree().create_timer(1.0).timeout
 		get_tree().reload_current_scene()
+		return
 
+	global_position = posicao_inicial
+	tempo_restante = TEMPO_PARA_ACHAR_PEIXE
+	_machucar()
 
 
 func _atualizar_parado(delta):
