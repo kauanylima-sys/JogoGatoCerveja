@@ -39,22 +39,21 @@
 [ext_resource type="Texture2D" uid="uid://neo1xjl07iwm" path="res://assets/sprite_pack_cat/run/run_09.png" id="36_gc4p7"]
 [ext_resource type="Texture2D" uid="uid://celmrma7nfp5n" path="res://assets/sprite_pack_cat/run/run_10.png" id="37_xaq7i"]
 [ext_resource type="Texture2D" uid="uid://du2uf6dtubqnr" path="res://assets/sprite_pack_cat/run/run_11.png" id="38_xoc42"]
-[ext_resource type="Texture2D" uid="uid://cqb17jxp1r2hv" path="res://assets/sprite_pack_cat/walk/cat_walk_00.png" id="39_upvc7"]
-[ext_resource type="Texture2D" uid="uid://dxrcyuw3j80ou" path="res://assets/sprite_pack_cat/walk/cat_walk_01.png" id="40_2601i"]
-[ext_resource type="Texture2D" uid="uid://cox6fbmgt4edn" path="res://assets/sprite_pack_cat/walk/cat_walk_02.png" id="41_en6l4"]
-[ext_resource type="Texture2D" uid="uid://460dk6wfagjy" path="res://assets/sprite_pack_cat/walk/cat_walk_03.png" id="42_yeuke"]
-[ext_resource type="Texture2D" uid="uid://cynh73eocal2e" path="res://assets/walk/cat_walk_04.png" id="43_8u0ji"]
-[ext_resource type="Texture2D" uid="uid://6vnjb327jidu" path="res://assets/walk/cat_walk_05.png" id="44_ankfa"]
-[ext_resource type="Texture2D" uid="uid://dt0k7a5ksulqf" path="res://assets/walk/cat_walk_06.png" id="45_li1gk"]
-[ext_resource type="Texture2D" uid="uid://ttck3mva4v25" path="res://assets/walk/cat_walk_07.png" id="46_7twju"]
-[ext_resource type="Texture2D" uid="uid://cycyqhbqqyd0f" path="res://assets/walk/cat_walk_08.png" id="47_ohhtd"]
-[ext_resource type="Texture2D" uid="uid://bfnu8sv4ypvcf" path="res://assets/walk/cat_walk_09.png" id="48_pckvc"]
-[ext_resource type="Texture2D" uid="uid://cv3wmy17qwobn" path="res://assets/walk/cat_walk_10.png" id="49_35iu3"]
-[ext_resource type="Texture2D" uid="uid://ovppyhh602cd" path="res://assets/walk/cat_walk_12.png" id="50_xdj02"]
-[ext_resource type="Texture2D" uid="uid://b5jghc7gemre4" path="res://assets/walk/cat_walk_11.png" id="51_pquhf"]
-[ext_resource type="Texture2D" uid="uid://b4qo5rhm74ek0" path="res://assets/walk/cat_walk_13.png" id="52_0k0x3"]
-[ext_resource type="Texture2D" uid="uid://dtlxba7d5sixk" path="res://assets/walk/cat_walk_14.png" id="53_pjx26"]
-[ext_resource type="Texture2D" uid="uid://dk04u0xeegcw5" path="res://assets/walk/cat_walk_15.png" id="54_tsxhf"]
+[ext_resource type="Texture2D" uid="uid://cqb17jxp1r2hv" path="res://assets/sprite_pack_cat/walk/cat_walk_00.png" id="40_eebx8"]
+[ext_resource type="Texture2D" uid="uid://dxrcyuw3j80ou" path="res://assets/sprite_pack_cat/walk/cat_walk_01.png" id="41_mq83j"]
+[ext_resource type="Texture2D" uid="uid://460dk6wfagjy" path="res://assets/sprite_pack_cat/walk/cat_walk_03.png" id="42_1pgoi"]
+[ext_resource type="Texture2D" uid="uid://cynh73eocal2e" path="res://assets/sprite_pack_cat/walk/cat_walk_04.png" id="43_5ovxj"]
+[ext_resource type="Texture2D" uid="uid://6vnjb327jidu" path="res://assets/sprite_pack_cat/walk/cat_walk_05.png" id="44_7r07p"]
+[ext_resource type="Texture2D" uid="uid://dt0k7a5ksulqf" path="res://assets/sprite_pack_cat/walk/cat_walk_06.png" id="45_sthmp"]
+[ext_resource type="Texture2D" uid="uid://ttck3mva4v25" path="res://assets/sprite_pack_cat/walk/cat_walk_07.png" id="46_f1g6w"]
+[ext_resource type="Texture2D" uid="uid://cycyqhbqqyd0f" path="res://assets/sprite_pack_cat/walk/cat_walk_08.png" id="47_cidtu"]
+[ext_resource type="Texture2D" uid="uid://bfnu8sv4ypvcf" path="res://assets/sprite_pack_cat/walk/cat_walk_09.png" id="48_xbffd"]
+[ext_resource type="Texture2D" uid="uid://cv3wmy17qwobn" path="res://assets/sprite_pack_cat/walk/cat_walk_10.png" id="49_gc4p7"]
+[ext_resource type="Texture2D" uid="uid://ovppyhh602cd" path="res://assets/sprite_pack_cat/walk/cat_walk_12.png" id="50_xaq7i"]
+[ext_resource type="Texture2D" uid="uid://b5jghc7gemre4" path="res://assets/sprite_pack_cat/walk/cat_walk_11.png" id="51_xoc42"]
+[ext_resource type="Texture2D" uid="uid://b4qo5rhm74ek0" path="res://assets/sprite_pack_cat/walk/cat_walk_13.png" id="52_upvc7"]
+[ext_resource type="Texture2D" uid="uid://dtlxba7d5sixk" path="res://assets/sprite_pack_cat/walk/cat_walk_14.png" id="53_2601i"]
+[ext_resource type="Texture2D" uid="uid://dk04u0xeegcw5" path="res://assets/sprite_pack_cat/walk/cat_walk_15.png" id="54_en6l4"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_oi2um"]
 animations = [{
@@ -199,52 +198,52 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("39_upvc7")
+"texture": ExtResource("40_eebx8")
 }, {
 "duration": 1.0,
-"texture": ExtResource("40_2601i")
+"texture": ExtResource("41_mq83j")
 }, {
 "duration": 1.0,
-"texture": ExtResource("41_en6l4")
+"texture": ExtResource("42_1pgoi")
 }, {
 "duration": 1.0,
-"texture": ExtResource("42_yeuke")
+"texture": ExtResource("42_1pgoi")
 }, {
 "duration": 1.0,
-"texture": ExtResource("43_8u0ji")
+"texture": ExtResource("43_5ovxj")
 }, {
 "duration": 1.0,
-"texture": ExtResource("44_ankfa")
+"texture": ExtResource("44_7r07p")
 }, {
 "duration": 1.0,
-"texture": ExtResource("45_li1gk")
+"texture": ExtResource("45_sthmp")
 }, {
 "duration": 1.0,
-"texture": ExtResource("46_7twju")
+"texture": ExtResource("46_f1g6w")
 }, {
 "duration": 1.0,
-"texture": ExtResource("47_ohhtd")
+"texture": ExtResource("47_cidtu")
 }, {
 "duration": 1.0,
-"texture": ExtResource("48_pckvc")
+"texture": ExtResource("48_xbffd")
 }, {
 "duration": 1.0,
-"texture": ExtResource("49_35iu3")
+"texture": ExtResource("49_gc4p7")
 }, {
 "duration": 1.0,
-"texture": ExtResource("50_xdj02")
+"texture": ExtResource("50_xaq7i")
 }, {
 "duration": 1.0,
-"texture": ExtResource("51_pquhf")
+"texture": ExtResource("51_xoc42")
 }, {
 "duration": 1.0,
-"texture": ExtResource("52_0k0x3")
+"texture": ExtResource("52_upvc7")
 }, {
 "duration": 1.0,
-"texture": ExtResource("53_pjx26")
+"texture": ExtResource("53_2601i")
 }, {
 "duration": 1.0,
-"texture": ExtResource("54_tsxhf")
+"texture": ExtResource("54_en6l4")
 }],
 "loop": 1,
 "name": &"walk",
@@ -263,8 +262,8 @@ metadata/_edit_group_ = true
 position = Vector2(2.6206954, 2.0507295)
 scale = Vector2(0.313, 0.3)
 sprite_frames = SubResource("SpriteFrames_oi2um")
-animation = &"idle"
-frame_progress = 0.29982778
+animation = &"walk"
+frame_progress = 0.5373329
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1051260715]
 position = Vector2(2.5, 4)

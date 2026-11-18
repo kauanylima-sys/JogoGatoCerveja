@@ -5,8 +5,14 @@ const VELOCIDADE_CORRER = 160.0
 const VIDA_MAXIMA = 3
 
 const TEMPO_PARA_PISCAR = 4.0
-const TEMPO_PARA_LAMBER = 7.0
-const TEMPO_PARA_ACHAR_PEIXE = 20.0  
+const TEMPO_PARA_ACHAR_PEIXE = 60.0
+const TEMPO_AVISO = 10.0
+
+const RAIO_BUSCA = 40.0
+
+const FATOR_TAMANHO = 0.5
+
+const ZOOM_CAMERA = Vector2(3.5, 3.5)
 
 const ESCALAS = {
 	"idle": 0.3,
@@ -27,9 +33,12 @@ var fazendo_ocioso = false
 var machucado = false
 var morto = false
 var venceu = false
+var buscando = false
 var vida = VIDA_MAXIMA
 var tempo_restante = TEMPO_PARA_ACHAR_PEIXE
 var posicao_inicial = Vector2.ZERO
+var avisando = false
+var tween_aviso: Tween
 
 
 func _ready():
@@ -39,8 +48,22 @@ func _ready():
 	_criar_acao("oeste", [KEY_A, KEY_LEFT])
 	_criar_acao("leste", [KEY_D, KEY_RIGHT])
 	_criar_acao("correr", [KEY_SHIFT])
+	_criar_acao("procurar", [KEY_E])
+	for nome in ["blink", "lick", "hurt"]:
+		if anim.sprite_frames.has_animation(nome):
+			anim.sprite_frames.set_animation_loop(nome, false)
 	anim.animation_finished.connect(_ao_terminar_animacao)
+	_configurar_camera()
 	_tocar("idle")
+
+
+func _configurar_camera():
+	var camera = get_viewport().get_camera_2d()
+	if camera == null:
+		camera = Camera2D.new()
+		add_child(camera)
+		camera.make_current()
+	camera.zoom = ZOOM_CAMERA
 
 
 func _physics_process(delta):
@@ -53,6 +76,18 @@ func _physics_process(delta):
 	tempo_restante -= delta
 	if tempo_restante <= 0.0:
 		_perder_vida_por_tempo()
+		return
+
+	if tempo_restante <= TEMPO_AVISO and not avisando:
+		_iniciar_aviso()
+
+	if buscando:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+
+	if Input.is_action_just_pressed("procurar"):
+		_procurar()
 		return
 
 	var direcao = Input.get_vector("oeste", "leste", "norte", "sul")
@@ -86,6 +121,7 @@ func comer(tipo: String):
 		_machucar()
 	elif tipo == "peixe":
 		tempo_restante = TEMPO_PARA_ACHAR_PEIXE
+		_parar_aviso()
 		vida = min(vida + 1, VIDA_MAXIMA)
 		var restantes = get_tree().get_nodes_in_group("peixe").size()
 		print("Nhac! Vida: ", vida, " | Peixes restantes: ", restantes)
@@ -93,9 +129,51 @@ func comer(tipo: String):
 			_passar_de_fase()
 
 
+func _procurar():
+	buscando = true
+	fazendo_ocioso = false
+	tempo_parado = 0.0
+	velocity = Vector2.ZERO
+	_tocar("idle")
+
+	var tween = create_tween()
+	tween.tween_property(anim, "rotation_degrees", -8.0, 0.2)
+	tween.tween_property(anim, "rotation_degrees", 8.0, 0.4)
+	tween.tween_property(anim, "rotation_degrees", 0.0, 0.2)
+	tween.set_loops(2)
+	await tween.finished
+
+	anim.rotation_degrees = 0.0
+	buscando = false
+
+	if morto or venceu:
+		return
+
+	if _revelar_peixe_proximo():
+		print("Achou um peixe!")
+	else:
+		print("Nada por aqui...")
+
+
+func _revelar_peixe_proximo() -> bool:
+	for no in get_tree().get_nodes_in_group("peixe"):
+		var peixe = no as Node2D
+		if peixe == null or peixe.visible:
+			continue
+		if global_position.distance_to(peixe.global_position) <= RAIO_BUSCA:
+			peixe.modulate.a = 0.0
+			peixe.show()
+			if "monitoring" in peixe:
+				peixe.set_deferred("monitoring", true)
+			create_tween().tween_property(peixe, "modulate:a", 1.0, 0.3)
+			return true
+	return false
+
+
 func _passar_de_fase():
 	venceu = true
 	fazendo_ocioso = false
+	_parar_aviso()
 	print("Todos os peixes! Próxima fase...")
 	_tocar("lick")
 	await get_tree().create_timer(1.5).timeout
@@ -105,7 +183,6 @@ func _passar_de_fase():
 		print("Vitoria!!")
 		return
 	get_tree().change_scene_to_file(caminho)
-
 
 
 func _caminho_da_proxima_fase() -> String:
@@ -126,10 +203,26 @@ func _caminho_da_proxima_fase() -> String:
 	return ""
 
 
+func _iniciar_aviso():
+	avisando = true
+	tween_aviso = create_tween().set_loops()
+	tween_aviso.tween_property(anim, "modulate", Color(1, 0.4, 0.4), 0.3)
+	tween_aviso.tween_property(anim, "modulate", Color.WHITE, 0.3)
+
+
+func _parar_aviso():
+	avisando = false
+	if tween_aviso:
+		tween_aviso.kill()
+	anim.modulate = Color.WHITE
+
+
 func _machucar():
 	if machucado:
 		return
+	_parar_aviso()
 	machucado = true
+	buscando = false
 	fazendo_ocioso = false
 	tempo_parado = 0.0
 	_tocar("hurt")
@@ -142,6 +235,7 @@ func _machucar():
 
 func _perder_vida_por_tempo():
 	vida -= 1
+	_parar_aviso()
 	print("Tempo esgotado! Vida: ", vida)
 
 	if vida <= 0:
@@ -153,7 +247,9 @@ func _perder_vida_por_tempo():
 
 	global_position = posicao_inicial
 	tempo_restante = TEMPO_PARA_ACHAR_PEIXE
-	_machucar()
+	tempo_parado = 0.0
+	fazendo_ocioso = false
+	_tocar("idle")
 
 
 func _atualizar_parado(delta):
@@ -162,13 +258,9 @@ func _atualizar_parado(delta):
 
 	tempo_parado += delta
 
-	if tempo_parado >= TEMPO_PARA_LAMBER:
+	if tempo_parado >= TEMPO_PARA_PISCAR and anim.animation == "idle":
 		fazendo_ocioso = true
-		tempo_parado = 0.0
-		_tocar("lick", false)
-	elif tempo_parado >= TEMPO_PARA_PISCAR and anim.animation == "idle":
-		fazendo_ocioso = true
-		_tocar("blink", false)
+		_tocar("blink")
 	elif anim.animation != "idle":
 		_tocar("idle")
 
@@ -179,8 +271,11 @@ func _ao_terminar_animacao():
 	if anim.animation == "hurt":
 		machucado = false
 		_tocar("idle")
-	elif anim.animation == "blink" or anim.animation == "lick":
+	elif anim.animation == "blink":
+		_tocar("lick")
+	elif anim.animation == "lick":
 		fazendo_ocioso = false
+		tempo_parado = 0.0
 		_tocar("idle")
 
 
@@ -198,7 +293,7 @@ func _criar_acao(nome: String, teclas: Array):
 		InputMap.action_add_event(nome, evento)
 
 
-func _tocar(nome: String, reiniciar: bool = true):
-	anim.scale = Vector2.ONE * ESCALAS.get(nome, 0.3)
-	if reiniciar or anim.animation != nome:
+func _tocar(nome: String):
+	anim.scale = Vector2.ONE * ESCALAS.get(nome, 0.3) * FATOR_TAMANHO
+	if anim.animation != nome or not anim.is_playing():
 		anim.play(nome)
