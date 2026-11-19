@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ovppyhh602cd"
-path="res://.godot/imported/cat_walk_12.png-38ffac92f4e2ac81973ce156b01fc81f.ctex"
+path="res://.godot/imported/cat_walk_12.png-816849db9f71c3ce1b514f754a2210c7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/walk/cat_walk_12.png"
-dest_files=["res://.godot/imported/cat_walk_12.png-38ffac92f4e2ac81973ce156b01fc81f.ctex"]
+source_file="res://assets/sprite_pack_cat/walk/cat_walk_12.png"
+dest_files=["res://.godot/imported/cat_walk_12.png-816849db9f71c3ce1b514f754a2210c7.ctex"]
 
 [params]
 

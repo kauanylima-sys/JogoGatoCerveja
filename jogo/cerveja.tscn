@@ -262,8 +262,8 @@ metadata/_edit_group_ = true
 position = Vector2(2.6206954, 2.0507295)
 scale = Vector2(0.313, 0.3)
 sprite_frames = SubResource("SpriteFrames_oi2um")
-animation = &"walk"
-frame_progress = 0.5373329
+animation = &"blink"
+autoplay = "blink"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1051260715]
 position = Vector2(2.5, 4)
