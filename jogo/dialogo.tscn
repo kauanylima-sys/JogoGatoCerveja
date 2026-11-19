@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://cqwft1lagr8sn"]
+
+[ext_resource type="Script" uid="uid://ckxr6b1s21lqn" path="res://dialogo.gd" id="1_7ebmd"]
+[ext_resource type="Texture2D" uid="uid://5ydf1b65gsfa" path="res://assets/retratos/cerveja/01_neutro.png" id="2_7ebmd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r516b"]
+bg_color = Color(0.16078432, 0.1254902, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7137255, 0.48235294, 0.5686275, 1)
+
+[node name="dialogo" type="CanvasLayer" unique_id=692856554]
+script = ExtResource("1_7ebmd")
+
+[node name="Control" type="Control" parent="." unique_id=1786516711]
+propagate_maximum_size = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Control" unique_id=986116174]
+custom_minimum_size = Vector2(700, 130)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -350.0
+offset_top = -150.0
+offset_right = 350.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+offset_transform_enabled = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_r516b")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer" unique_id=2010059403]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/PanelContainer/MarginContainer" unique_id=1836698689]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="retratoPersonagem" type="TextureRect" parent="Control/PanelContainer/MarginContainer/HBoxContainer" unique_id=722043083]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("2_7ebmd")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer/MarginContainer/HBoxContainer" unique_id=1567951049]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="nomePersonagem" type="Label" parent="Control/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=2068027497]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8901961, 0.76862746, 1)
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 18
+text = "Cerveja"
+
+[node name="textoDialogo" type="Label" parent="Control/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=8969041]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9607843, 0.9019608, 0.8627451, 1)
+text = "É isso? me largaram aqui sem nenhuma despedida? "
+autowrap_mode = 3
+
+[node name="espacamento" type="Control" parent="Control/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1797382738]
+custom_minimum_size = Vector2(18, 0)
+layout_mode = 2
+
+[node name="indicador" type="Label" parent="Control/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1787627438]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8509804, 0.7176471, 0.78039217, 1)
+theme_override_font_sizes/font_size = 12
+text = "Pressione ENTER para continuar"
