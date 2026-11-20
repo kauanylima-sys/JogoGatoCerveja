@@ -11,8 +11,16 @@ const TEMPO_AVISO = 10.0
 const RAIO_BUSCA = 40.0
 
 const FATOR_TAMANHO = 0.5
-
 const ZOOM_CAMERA = Vector2(3.5, 3.5)
+const AJUSTE_VERTICAL = 0.52
+
+const PASTA_COMER = "res://cat_eating/frames/eat_once_%02d.png"
+const DURACOES_COMER = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4]
+const VELOCIDADE_COMER = 6.0
+const AJUSTE_COMER = 1.0
+const OFFSETS = {
+	"eat": Vector2.ZERO,
+}
 
 const ESCALAS = {
 	"idle": 0.3,
@@ -20,28 +28,44 @@ const ESCALAS = {
 	"run": 0.05,
 	"blink": 0.3,
 	"lick": 0.3,
-	"hurt": 0.3,
+	"walk_up": 0.3,
+	"walk_down": 0.3,
+	"eat": 0.3,
 }
 
 @onready var anim = $AnimatedSprite2D
 
 const ROSA_DOS_VENTOS = ["L", "SE", "S", "SO", "O", "NO", "N", "NE"]
+const NOMES_DIRECOES = {
+	"N": "Norte",
+	"NE": "Nordeste",
+	"L": "Leste",
+	"SE": "Sudeste",
+	"S": "Sul",
+	"SO": "Sudoeste",
+	"O": "Oeste",
+	"NO": "Noroeste",
+}
 
 var direcao_atual = "S"
 var tempo_parado = 0.0
 var fazendo_ocioso = false
-var machucado = false
 var morto = false
 var venceu = false
 var buscando = false
+var comendo = false
 var vida = VIDA_MAXIMA
 var tempo_restante = TEMPO_PARA_ACHAR_PEIXE
 var posicao_inicial = Vector2.ZERO
 var avisando = false
 var tween_aviso: Tween
+var escalas_auto = {}
+var rotulo_mensagem: Label
+var tween_mensagem: Tween
 
 
 func _ready():
+	add_to_group("jogador")
 	posicao_inicial = global_position
 	_criar_acao("norte", [KEY_W, KEY_UP])
 	_criar_acao("sul", [KEY_S, KEY_DOWN])
@@ -49,12 +73,55 @@ func _ready():
 	_criar_acao("leste", [KEY_D, KEY_RIGHT])
 	_criar_acao("correr", [KEY_SHIFT])
 	_criar_acao("procurar", [KEY_E])
-	for nome in ["blink", "lick", "hurt"]:
+	_adicionar_animacao_comer()
+	for nome in ["blink", "lick", "eat"]:
 		if anim.sprite_frames.has_animation(nome):
 			anim.sprite_frames.set_animation_loop(nome, false)
 	anim.animation_finished.connect(_ao_terminar_animacao)
+	_ajustar_escalas_verticais()
+	_ajustar_escala_comer()
 	_configurar_camera()
+	_criar_mensagem()
 	_tocar("idle")
+
+
+func _criar_mensagem():
+	var camada = CanvasLayer.new()
+	add_child(camada)
+	rotulo_mensagem = Label.new()
+	rotulo_mensagem.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	rotulo_mensagem.offset_top = 16
+	rotulo_mensagem.offset_bottom = 48
+	rotulo_mensagem.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	rotulo_mensagem.add_theme_font_size_override("font_size", 20)
+	rotulo_mensagem.add_theme_color_override("font_outline_color", Color.BLACK)
+	rotulo_mensagem.add_theme_constant_override("outline_size", 6)
+	rotulo_mensagem.modulate.a = 0.0
+	camada.add_child(rotulo_mensagem)
+
+
+func _mostrar_mensagem(texto: String, duracao: float = 3.0):
+	print(texto)
+	if rotulo_mensagem == null:
+		return
+	rotulo_mensagem.text = texto
+	if tween_mensagem:
+		tween_mensagem.kill()
+	rotulo_mensagem.modulate.a = 1.0
+	tween_mensagem = create_tween()
+	tween_mensagem.tween_interval(duracao)
+	tween_mensagem.tween_property(rotulo_mensagem, "modulate:a", 0.0, 0.5)
+
+
+func mostrar_dica_peixe():
+	var total = get_tree().get_nodes_in_group("peixe").size()
+	var peixe = _peixe_escondido_mais_proximo()
+	print("DICA -> peixes no grupo: ", total, " | escondido mais próximo: ", peixe)
+	if peixe == null:
+		_mostrar_mensagem("Não sinto nenhum peixe escondido por perto...")
+		return
+	var rumo = _nome_da_direcao(peixe.global_position - global_position)
+	_mostrar_mensagem("Dica: o peixe mais próximo está ao " + NOMES_DIRECOES[rumo], 5.0)
 
 
 func _configurar_camera():
@@ -68,7 +135,7 @@ func _configurar_camera():
 
 func _physics_process(delta):
 
-	if machucado or morto or venceu:
+	if morto or venceu:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
@@ -81,7 +148,7 @@ func _physics_process(delta):
 	if tempo_restante <= TEMPO_AVISO and not avisando:
 		_iniciar_aviso()
 
-	if buscando:
+	if buscando or comendo:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
@@ -103,10 +170,14 @@ func _physics_process(delta):
 		var velocidade = VELOCIDADE_CORRER if correndo else VELOCIDADE_ANDAR
 		velocity = direcao * velocidade
 
-		if direcao.x != 0:
-			anim.flip_h = direcao.x < 0
-
-		_tocar("run" if correndo else "walk")
+		if abs(direcao.y) > 0.5:
+			anim.flip_h = false
+			_tocar("walk_up" if direcao.y < 0 else "walk_down")
+			anim.speed_scale = 1.6 if correndo else 1.0
+		else:
+			if direcao.x != 0:
+				anim.flip_h = direcao.x < 0
+			_tocar("run" if correndo else "walk")
 	else:
 		velocity = Vector2.ZERO
 		_atualizar_parado(delta)
@@ -117,16 +188,34 @@ func _physics_process(delta):
 func comer(tipo: String):
 	if morto or venceu:
 		return
-	if tipo == "lixo":
-		_machucar()
-	elif tipo == "peixe":
+	if tipo == "peixe":
 		tempo_restante = TEMPO_PARA_ACHAR_PEIXE
 		_parar_aviso()
 		vida = min(vida + 1, VIDA_MAXIMA)
 		var restantes = get_tree().get_nodes_in_group("peixe").size()
 		print("Nhac! Vida: ", vida, " | Peixes restantes: ", restantes)
+		_comecar_a_comer()
 		if restantes == 0:
+			venceu = true
+			if comendo:
+				await anim.animation_finished
 			_passar_de_fase()
+
+
+func _comecar_a_comer():
+	if not anim.sprite_frames.has_animation("eat"):
+		# sem os quadros de "comer", toca a lambida para mostrar alguma reação
+		fazendo_ocioso = true
+		tempo_parado = 0.0
+		velocity = Vector2.ZERO
+		_tocar("lick")
+		return
+	comendo = true
+	fazendo_ocioso = false
+	tempo_parado = 0.0
+	velocity = Vector2.ZERO
+	anim.rotation_degrees = 0.0
+	_tocar("eat")
 
 
 func _procurar():
@@ -149,25 +238,48 @@ func _procurar():
 	if morto or venceu:
 		return
 
-	if _revelar_peixe_proximo():
-		print("Achou um peixe!")
+	var peixe_achado = _peixe_ao_alcance()
+	if peixe_achado != null:
+		# achou: o peixe sai do jogo e o personagem come (toca a animação de comer)
+		_mostrar_mensagem("Achou um peixe!")
+		peixe_achado.remove_from_group("peixe")
+		peixe_achado.queue_free()
+		comer("peixe")
 	else:
-		print("Nada por aqui...")
+		var peixe = _peixe_escondido_mais_proximo()
+		if peixe == null:
+			_mostrar_mensagem("Nada por aqui...")
+		else:
+			var rumo = _nome_da_direcao(peixe.global_position - global_position)
+			_mostrar_mensagem("Nada por aqui... o peixe mais próximo está ao " + NOMES_DIRECOES[rumo])
 
 
-func _revelar_peixe_proximo() -> bool:
+func _peixe_escondido_mais_proximo() -> Node2D:
+	var mais_proximo: Node2D = null
+	var menor = INF
 	for no in get_tree().get_nodes_in_group("peixe"):
 		var peixe = no as Node2D
 		if peixe == null or peixe.visible:
 			continue
-		if global_position.distance_to(peixe.global_position) <= RAIO_BUSCA:
-			peixe.modulate.a = 0.0
-			peixe.show()
-			if "monitoring" in peixe:
-				peixe.set_deferred("monitoring", true)
-			create_tween().tween_property(peixe, "modulate:a", 1.0, 0.3)
-			return true
-	return false
+		var distancia = global_position.distance_to(peixe.global_position)
+		if distancia < menor:
+			menor = distancia
+			mais_proximo = peixe
+	return mais_proximo
+
+
+func _peixe_ao_alcance() -> Node2D:
+	var mais_proximo: Node2D = null
+	var menor = RAIO_BUSCA
+	for no in get_tree().get_nodes_in_group("peixe"):
+		var peixe = no as Node2D
+		if peixe == null:
+			continue
+		var distancia = global_position.distance_to(peixe.global_position)
+		if distancia <= menor:
+			menor = distancia
+			mais_proximo = peixe
+	return mais_proximo
 
 
 func _passar_de_fase():
@@ -217,22 +329,6 @@ func _parar_aviso():
 	anim.modulate = Color.WHITE
 
 
-func _machucar():
-	if machucado:
-		return
-	_parar_aviso()
-	machucado = true
-	buscando = false
-	fazendo_ocioso = false
-	tempo_parado = 0.0
-	_tocar("hurt")
-
-	var tween = create_tween()
-	tween.tween_property(anim, "modulate", Color(1, 0.4, 0.4), 0.15)
-	tween.tween_property(anim, "modulate", Color.WHITE, 0.15)
-	tween.set_loops(2)
-
-
 func _perder_vida_por_tempo():
 	vida -= 1
 	_parar_aviso()
@@ -249,6 +345,7 @@ func _perder_vida_por_tempo():
 	tempo_restante = TEMPO_PARA_ACHAR_PEIXE
 	tempo_parado = 0.0
 	fazendo_ocioso = false
+	comendo = false
 	_tocar("idle")
 
 
@@ -266,12 +363,18 @@ func _atualizar_parado(delta):
 
 
 func _ao_terminar_animacao():
+	if anim.animation == "eat":
+		comendo = false
+		if venceu or morto:
+			return
+		fazendo_ocioso = false
+		tempo_parado = 0.0
+		_tocar("idle")
+		return
+
 	if venceu or morto:
 		return
-	if anim.animation == "hurt":
-		machucado = false
-		_tocar("idle")
-	elif anim.animation == "blink":
+	if anim.animation == "blink":
 		_tocar("lick")
 	elif anim.animation == "lick":
 		fazendo_ocioso = false
@@ -293,7 +396,57 @@ func _criar_acao(nome: String, teclas: Array):
 		InputMap.action_add_event(nome, evento)
 
 
+func _largura_visivel(nome: String) -> float:
+	if not anim.sprite_frames.has_animation(nome):
+		return 0.0
+	var textura = anim.sprite_frames.get_frame_texture(nome, 0)
+	if textura == null:
+		return 0.0
+	var imagem = textura.get_image()
+	if imagem == null:
+		return 0.0
+	return float(imagem.get_used_rect().size.x)
+
+
+func _ajustar_escalas_verticais():
+	var largura_ref = _largura_visivel("idle")
+	var largura_cima = _largura_visivel("walk_up")
+	if largura_ref <= 0.0 or largura_cima <= 0.0:
+		return
+	var escala = ESCALAS["idle"] * largura_ref / largura_cima * AJUSTE_VERTICAL
+	escalas_auto["walk_up"] = escala
+	escalas_auto["walk_down"] = escala
+
+
+func _adicionar_animacao_comer():
+	if anim.sprite_frames.has_animation("eat"):
+		return
+	var frames: SpriteFrames = anim.sprite_frames
+	frames.add_animation("eat")
+	frames.set_animation_speed("eat", VELOCIDADE_COMER)
+	frames.set_animation_loop("eat", false)
+	for i in DURACOES_COMER.size():
+		var caminho = PASTA_COMER % i
+		if not ResourceLoader.exists(caminho):
+			push_warning("Quadro da animação de comer não encontrado: " + caminho)
+			continue
+		frames.add_frame("eat", load(caminho), DURACOES_COMER[i])
+	if frames.get_frame_count("eat") == 0:
+		frames.remove_animation("eat")
+
+
+func _ajustar_escala_comer():
+	var largura_ref = _largura_visivel("idle")
+	var largura_comer = _largura_visivel("eat")
+	if largura_ref <= 0.0 or largura_comer <= 0.0:
+		return
+	escalas_auto["eat"] = ESCALAS["idle"] * largura_ref / largura_comer * AJUSTE_COMER
+
+
 func _tocar(nome: String):
-	anim.scale = Vector2.ONE * ESCALAS.get(nome, 0.3) * FATOR_TAMANHO
+	anim.speed_scale = 1.0
+	anim.offset = OFFSETS.get(nome, Vector2.ZERO)
+	var escala = escalas_auto.get(nome, ESCALAS.get(nome, 0.3))
+	anim.scale = Vector2.ONE * escala * FATOR_TAMANHO
 	if anim.animation != nome or not anim.is_playing():
 		anim.play(nome)
