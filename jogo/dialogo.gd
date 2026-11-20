@@ -3,10 +3,13 @@ extends CanvasLayer
 
 signal dialogo_finalizado
 
-@onready var painel = $PanelContainer
-@onready var retrato = $PanelContainer/MarginContainer/HBoxContainer/retratoPersonagem
-@onready var nome = $PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/nomePersonagem
-@onready var texto = $PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/textoDialogo
+@onready var painel = $Control/PanelContainer
+
+@onready var retrato = $Control/PanelContainer/MarginContainer/HBoxContainer/retratoPersonagem
+
+@onready var nome = $Control/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/nomePersonagem
+
+@onready var texto = $Control/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/textoDialogo
 
 var falas: Array[Dictionary] = []
 var indice: int = 0
