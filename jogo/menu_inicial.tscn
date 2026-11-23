@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://ducjnelt15pw7"]
+
+[ext_resource type="Script" uid="uid://dcuyu2fbbl4jg" path="res://menu_inicial.gd" id="1_eap13"]
+[ext_resource type="Texture2D" uid="uid://daydryw8nbp8a" path="res://assets/telas/fundo/fundo_menu.png" id="1_u4fxu"]
+[ext_resource type="Texture2D" uid="uid://dvq7pkupfvfeb" path="res://assets/telas/buttons/botao_hover.png" id="2_3exob"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ljvw2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ntili"]
+
+[node name="menuInicial" type="Control" unique_id=1472846671]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_eap13")
+
+[node name="FundoMenu" type="Sprite2D" parent="." unique_id=141854477]
+position = Vector2(577.99994, 332.75)
+scale = Vector2(0.98039216, 0.78415966)
+texture = ExtResource("1_u4fxu")
+
+[node name="BotaoHover2" type="Sprite2D" parent="." unique_id=1067813354]
+position = Vector2(941, 340)
+scale = Vector2(0.45574144, 0.48037192)
+texture = ExtResource("2_3exob")
+
+[node name="Jogar" type="Button" parent="." unique_id=1032188061]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 853.99994
+offset_top = 317.343
+offset_right = 1230.6354
+offset_bottom = 410.343
+scale = Vector2(0.45933014, 0.45867768)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 68
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ljvw2")
+text = "Jogar"
+language = "Creditos"
+
+[node name="BotaoHover3" type="Sprite2D" parent="." unique_id=328253491]
+position = Vector2(945.00006, 407)
+scale = Vector2(0.45574144, 0.48037192)
+texture = ExtResource("2_3exob")
+
+[node name="Credito" type="Button" parent="." unique_id=394315197]
+layout_mode = 0
+offset_left = 891.0
+offset_top = 388.0
+offset_right = 996.0
+offset_bottom = 423.0
+theme_override_colors/font_color = Color(17.483578, 16.356714, 16.638432, 1)
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ntili")
+text = "Creditos"
+
+[connection signal="pressed" from="Jogar" to="." method="_on_jogar_pressed"]
