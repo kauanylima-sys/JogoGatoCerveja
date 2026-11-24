@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bsf2o6kotq2bx" path="res://assets/sprite_pack_city/2_elementos_decorativos/decoracoes_fase1_grade16.png" id="2_jbu07"]
 [ext_resource type="PackedScene" uid="uid://cvfyopjw5ika1" path="res://cerveja.tscn" id="3_3wmwu"]
 [ext_resource type="PackedScene" uid="uid://cqwft1lagr8sn" path="res://dialogo.tscn" id="4_cs2tf"]
+[ext_resource type="PackedScene" uid="uid://cyow4rvd1rf6l" path="res://tico.tscn" id="7_5sqpf"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbu07"]
 texture = ExtResource("1_axix2")
@@ -759,6 +760,7 @@ a = Vector2(-3, 127)
 b = Vector2(962, 126)
 
 [node name="fase01" type="Node2D" unique_id=360422394]
+y_sort_enabled = true
 position = Vector2(1, -128)
 script = ExtResource("1_ajqja")
 
@@ -804,6 +806,9 @@ tile_set = SubResource("TileSet_inqft")
 
 [node name="cerveja" parent="." unique_id=98638339 instance=ExtResource("3_3wmwu")]
 position = Vector2(564, 338)
+
+[node name="tico" parent="." unique_id=1120312552 instance=ExtResource("7_5sqpf")]
+position = Vector2(238, 269)
 
 [node name="dialogo" parent="." unique_id=692856554 instance=ExtResource("4_cs2tf")]
 
