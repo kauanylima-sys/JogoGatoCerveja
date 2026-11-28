@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://daydryw8nbp8a"
-path="res://.godot/imported/fundo_menu.png-f8fea424f39670ca7b6c96443edc3d91.ctex"
+uid="uid://dcg31schkr87k"
+path="res://.godot/imported/fundo_inicio.png-44079cf7feac0a72323bba79560968a3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/telas/fundo/fundo_menu.png"
-dest_files=["res://.godot/imported/fundo_menu.png-f8fea424f39670ca7b6c96443edc3d91.ctex"]
+source_file="res://assets/telas/fundo/fundo_inicio.png"
+dest_files=["res://.godot/imported/fundo_inicio.png-44079cf7feac0a72323bba79560968a3.ctex"]
 
 [params]
 
