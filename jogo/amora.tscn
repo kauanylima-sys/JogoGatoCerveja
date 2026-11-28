@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://g5s4ap6h44ab"]
+
+[ext_resource type="Texture2D" uid="uid://rra83o5uyajl" path="res://assets/sprite_pack_amora/paradaFrente.png" id="1_5o0xd"]
+[ext_resource type="Texture2D" uid="uid://db4swhvqjo200" path="res://assets/sprite_pack_tico/sit/tico_sit.png" id="2_x0y0t"]
+[ext_resource type="Texture2D" uid="uid://hlvpc7q5oyv3" path="res://assets/sprite_pack_tico/sleep/tico_sleep.png" id="3_vdqio"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k0pua"]
+atlas = ExtResource("1_5o0xd")
+region = Rect2(0, 0, 541, 727)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sayel"]
+atlas = ExtResource("1_5o0xd")
+region = Rect2(541, 0, 541, 727)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vmhfy"]
+atlas = ExtResource("1_5o0xd")
+region = Rect2(1082, 0, 541, 727)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pu7qw"]
+atlas = ExtResource("1_5o0xd")
+region = Rect2(1623, 0, 541, 727)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ffspm"]
+atlas = ExtResource("2_x0y0t")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_023sg"]
+atlas = ExtResource("3_vdqio")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eywkr"]
+atlas = ExtResource("3_vdqio")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1p3kp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k0pua")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sayel")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vmhfy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pu7qw")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ffspm")
+}],
+"loop": 0,
+"name": &"sit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 5.0,
+"texture": SubResource("AtlasTexture_023sg")
+}, {
+"duration": 5.0,
+"texture": SubResource("AtlasTexture_eywkr")
+}],
+"loop": 1,
+"name": &"sleep",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wncnm"]
+radius = 3.0
+height = 8.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7o861"]
+radius = 24.020824
+
+[node name="amora" type="CharacterBody2D" unique_id=2040397923]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2050055162]
+position = Vector2(-1.9999995, -2)
+scale = Vector2(0.018052867, 0.01879614)
+sprite_frames = SubResource("SpriteFrames_1p3kp")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=609518772]
+position = Vector2(-2, -2)
+shape = SubResource("CapsuleShape2D_wncnm")
+
+[node name="areaInteracao" type="Area2D" parent="." unique_id=1100995074]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="areaInteracao" unique_id=1929787156]
+position = Vector2(-2, -2)
+shape = SubResource("CircleShape2D_7o861")
+
+[node name="AvisoInteracao" type="Label" parent="." unique_id=115793321]
+offset_left = -33.0
+offset_top = -19.0
+offset_right = 69.0
+offset_bottom = 4.0
+scale = Vector2(0.6, 0.6)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 10
+text = "E - Conversar"
+horizontal_alignment = 1
