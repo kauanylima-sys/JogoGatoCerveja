@@ -117,7 +117,12 @@ func _configurar_camera():
 
 func _physics_process(delta):
 
-	if morto or venceu:
+	if get_meta("em_dialogo", false):
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+
+	if machucado or morto or venceu:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
@@ -135,7 +140,7 @@ func _physics_process(delta):
 		move_and_slide()
 		return
 
-	if Input.is_action_just_pressed("procurar"):
+	if Input.is_action_just_pressed("procurar") and not get_meta("npc_proximo", false):
 		_procurar()
 		return
 

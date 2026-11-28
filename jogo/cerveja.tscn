@@ -329,25 +329,25 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_f07vn"]
-size = Vector2(15, 16)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5cywu"]
+radius = 4.0
+height = 12.0
 
-[node name="cerveja" type="CharacterBody2D" unique_id=98638339]
+[node name="cerveja" type="CharacterBody2D" unique_id=98638339 groups=["jogador"]]
 motion_mode = 1
 script = ExtResource("1_mq83j")
-metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=854194395]
 position = Vector2(2.6206954, 2.0507295)
 scale = Vector2(0.313, 0.3)
 sprite_frames = SubResource("SpriteFrames_oi2um")
-animation = &"eating"
+animation = &"walk"
 autoplay = "blink"
 frame_progress = 0.60192645
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1051260715]
-position = Vector2(2.5, 4)
-shape = SubResource("RectangleShape2D_f07vn")
+position = Vector2(5, 6)
+shape = SubResource("CapsuleShape2D_5cywu")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1682637015]
 zoom = Vector2(4, 4)

@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://ducjnelt15pw7"]
+
+[ext_resource type="Script" uid="uid://dcuyu2fbbl4jg" path="res://menu_inicial.gd" id="1_eap13"]
+[ext_resource type="Texture2D" uid="uid://dvq7pkupfvfeb" path="res://assets/telas/buttons/botao_hover.png" id="2_3exob"]
+[ext_resource type="Texture2D" uid="uid://dcg31schkr87k" path="res://assets/telas/fundo/fundo_inicio.png" id="2_eap13"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ljvw2"]
+
+[node name="menuInicial" type="Control" unique_id=1472846671]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_eap13")
+
+[node name="FundoMenu" type="Sprite2D" parent="." unique_id=141854477]
+position = Vector2(577.06866, 327.56998)
+scale = Vector2(0.7701694, 0.6086041)
+texture = ExtResource("2_eap13")
+
+[node name="BotaoHover2" type="Sprite2D" parent="." unique_id=1067813354]
+position = Vector2(807.625, 456.23438)
+scale = Vector2(0.6824163, 0.83910114)
+texture = ExtResource("2_3exob")
+
+[node name="Jogar" type="Button" parent="." unique_id=1032188061]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 694.0
+offset_top = 411.00003
+offset_right = 1203.4375
+offset_bottom = 576.6937
+scale = Vector2(0.45933014, 0.45867768)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 117
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ljvw2")
+text = "Jogar"
+language = "Creditos"
+
+[connection signal="pressed" from="Jogar" to="." method="_on_jogar_pressed"]
