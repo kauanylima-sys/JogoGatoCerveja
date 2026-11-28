@@ -1,20 +1,7 @@
 [gd_scene format=3 uid="uid://h3mkkluu04a"]
 
 [ext_resource type="Texture2D" uid="uid://dg3wmhjcukwt2" path="res://assets/itens/peixe.png" id="1_6xwfd"]
-[ext_resource type="Script" uid="uid://c0wnfn0cdwm3j" path="res://peixe.gd" id="1_yd7nk"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ljvw2"]
-radius = 1.0
-height = 2.0
-
-[node name="Peixe" type="Area2D" unique_id=230155500]
-script = ExtResource("1_yd7nk")
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1379631258]
-position = Vector2(1.9999971, 2)
-scale = Vector2(0.14633177, 0.12194552)
+[node name="Peixe" type="Sprite2D" unique_id=1596549617 groups=["peixe"]]
+position = Vector2(8, 8)
 texture = ExtResource("1_6xwfd")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1806088275]
-position = Vector2(2, 2)
-shape = SubResource("CapsuleShape2D_ljvw2")

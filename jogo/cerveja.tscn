@@ -333,7 +333,6 @@ animations = [{
 size = Vector2(15, 16)
 
 [node name="cerveja" type="CharacterBody2D" unique_id=98638339]
-position = Vector2(0, 1)
 motion_mode = 1
 script = ExtResource("1_mq83j")
 metadata/_edit_group_ = true
