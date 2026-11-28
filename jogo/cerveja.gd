@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal busca_sem_resultado
+
 const VELOCIDADE_ANDAR = 80.0
 const VELOCIDADE_CORRER = 160.0
 const VIDA_MAXIMA = 3
@@ -122,7 +124,7 @@ func _physics_process(delta):
 		move_and_slide()
 		return
 
-	if machucado or morto or venceu:
+	if morto or venceu:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
@@ -225,6 +227,12 @@ func _procurar():
 	if morto or venceu:
 		return
 
+	# A fase pode bloquear a busca até a missão ser liberada.
+	if not get_meta("busca_liberada", true):
+		_mostrar_mensagem("Nada por aqui...")
+		busca_sem_resultado.emit()
+		return
+
 	var peixe_achado = _peixe_ao_alcance()
 	if peixe_achado != null:
 		_mostrar_mensagem("Achou um peixe!")
@@ -233,6 +241,7 @@ func _procurar():
 		comer("peixe")
 	else:
 		_mostrar_mensagem("Nada por aqui...")
+		busca_sem_resultado.emit()
 
 func _peixe_ao_alcance() -> Node2D:
 	var mais_proximo: Node2D = null
@@ -395,6 +404,18 @@ func _ajustar_escalas_horizontais():
 func _adicionar_animacao_comer():
 	if anim.sprite_frames.has_animation("eat"):
 		return
+	# Na fase 1, reaproveita os quadros de comer já presentes na cena.
+	if get_meta("usar_animacao_eating", false) and anim.sprite_frames.has_animation("eating"):
+		anim.sprite_frames = anim.sprite_frames.duplicate() as SpriteFrames
+		var existentes: SpriteFrames = anim.sprite_frames
+		if existentes.get_frame_count("eating") > 0:
+			existentes.add_animation("eat")
+			existentes.set_animation_speed("eat", existentes.get_animation_speed("eating"))
+			existentes.set_animation_loop("eat", false)
+			for i in existentes.get_frame_count("eating"):
+				existentes.add_frame("eat", existentes.get_frame_texture("eating", i), existentes.get_frame_duration("eating", i))
+			return
+
 	var frames: SpriteFrames = anim.sprite_frames
 	frames.add_animation("eat")
 	frames.set_animation_speed("eat", VELOCIDADE_COMER)
