@@ -55,7 +55,7 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_inqft"]
-radius = 2.0
+radius = 3.0
 height = 8.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1k5yr"]
@@ -64,6 +64,7 @@ radius = 24.020824
 [node name="tico" type="CharacterBody2D" unique_id=1120312552]
 position = Vector2(3, 2)
 script = ExtResource("1_5cywu")
+metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1356063773]
 position = Vector2(-2, -4)
@@ -79,7 +80,7 @@ shape = SubResource("CapsuleShape2D_inqft")
 [node name="areaInteracao" type="Area2D" parent="." unique_id=940886184]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="areaInteracao" unique_id=346324308]
-position = Vector2(-3, -3)
+position = Vector2(-3, -2)
 shape = SubResource("CircleShape2D_1k5yr")
 
 [node name="AvisoInteracao" type="Label" parent="." unique_id=1212705476]
