@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://h3mkkluu04a"]
+
+[ext_resource type="Texture2D" uid="uid://dg3wmhjcukwt2" path="res://assets/itens/peixe.png" id="1_6xwfd"]
+
+[node name="Peixe" type="Sprite2D" unique_id=1596549617 groups=["peixe"]]
+position = Vector2(8, 8)
+texture = ExtResource("1_6xwfd")

@@ -1,4 +1,3 @@
-
 extends CanvasLayer
 
 signal dialogo_finalizado
@@ -62,3 +61,8 @@ func finalizar_dialogo() -> void:
 	dialogo_ativo = false
 	painel.hide()
 	dialogo_finalizado.emit()
+
+	# Depois das falas, o personagem mostra para qual lado ir
+	var jogador = get_tree().get_first_node_in_group("jogador")
+	if jogador and jogador.has_method("mostrar_dica_peixe"):
+		jogador.mostrar_dica_peixe()
